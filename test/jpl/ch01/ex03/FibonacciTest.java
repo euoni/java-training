@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class FibonacciTest {
@@ -26,10 +26,10 @@ public class FibonacciTest {
 	public void test() {
 		Fibonacci.main(null);
 
-		String excepted = String.join(
+		String expected = String.join(
 			System.lineSeparator(),
 			new String[] { "Fibonacci", "1", "1", "2", "3", "5", "8", "13", "21", "34" }
 		);
-		assertEquals(excepted + System.lineSeparator(), outContent.toString());
+		assertEquals(expected + System.lineSeparator(), outContent.toString());
 	}
 }
