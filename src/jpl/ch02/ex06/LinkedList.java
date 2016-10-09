@@ -1,7 +1,5 @@
 package jpl.ch02.ex06;
 
-import jpl.ch02.ex05.Vehicle;
-
 public class LinkedList {
 	public Object value;
 	public LinkedList next;
