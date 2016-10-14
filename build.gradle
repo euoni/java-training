@@ -7,7 +7,8 @@ repositories {
 }
 
 dependencies {
-    testCompile('junit:junit:4.+')
+    testCompile 'org.jmockit:jmockit:1.28'
+    testCompile 'junit:junit:4.+'
 }
 
 jacocoTestReport {
