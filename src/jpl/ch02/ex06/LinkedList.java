@@ -1,9 +1,8 @@
 package jpl.ch02.ex06;
 
-public class LinkedList {
-	public Object value;
-	public LinkedList next;
+import jpl.ch02.ex05.Vehicle;
 
+public class LinkedList extends jpl.ch02.ex02.LinkedList {
 	public static void main(String[] args) {
 		final Vehicle car = new Vehicle();
 		car.speed = 60;

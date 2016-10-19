@@ -1,11 +1,11 @@
 package jpl.ch02.ex02;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 public class LinkedListTest {
-
 	@Test
 	public void test() {
 		final LinkedList first = new LinkedList();
@@ -16,7 +16,6 @@ public class LinkedListTest {
 
 		first.next = second;
 
-		assertEquals("second value", first.next.value);
+		assertThat(first.next.value, is("second value"));
 	}
-
 }

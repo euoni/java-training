@@ -3,7 +3,6 @@ package jpl.ch02.ex01;
 import org.junit.Test;
 
 public class VehicleTest {
-
 	@Test
 	public void test() {
 		final Vehicle vehicle = new Vehicle();
@@ -13,5 +12,4 @@ public class VehicleTest {
 
 		return; // pass
 	}
-
 }

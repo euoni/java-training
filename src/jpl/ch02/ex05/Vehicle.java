@@ -1,16 +1,6 @@
 package jpl.ch02.ex05;
 
-public class Vehicle {
-	private static int nextId;
-	public final int id;
-	public double speed;
-	public double direction;
-	public String owner;
-
-	public Vehicle() {
-		id = Vehicle.nextId++;
-	}
-
+public class Vehicle extends jpl.ch02.ex04.Vehicle {
 	public static void main(String[] args) {
 		final Vehicle car = new Vehicle();
 		car.speed = 60;
