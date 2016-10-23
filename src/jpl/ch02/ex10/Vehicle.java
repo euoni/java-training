@@ -5,5 +5,4 @@ public class Vehicle extends jpl.ch02.ex09.Vehicle {
 	public String toString() {
 		return "Vehicle [id=" + id + ", speed=" + speed + ", direction=" + direction + ", owner=" + owner + "]";
 	}
-
 }
