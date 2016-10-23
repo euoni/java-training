@@ -1,14 +1,19 @@
-apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 
-repositories {
-    mavenCentral()
+allprojects {
+    apply plugin: 'java'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        compile 'junit:junit:4.+'
+    }
 }
 
 dependencies {
     testCompile 'org.jmockit:jmockit:1.28'
-    testCompile 'junit:junit:4.+'
+    compile project(':jpltest')
 }
 
 jacocoTestReport {
@@ -19,6 +24,11 @@ jacocoTestReport {
 
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.test.java.srcDirs = ['test']
+
+project(':jpltest') {
+    sourceSets.main.java.srcDirs = ['.']
+    sourceSets.main.java.excludes = ['jpl/']
+}
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
