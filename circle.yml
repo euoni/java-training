@@ -2,6 +2,10 @@ machine:
   timezone: Asia/Tokyo
   java:
     version: oraclejdk8
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
 test:
   post:
     - ./gradlew jacocoTestReport
