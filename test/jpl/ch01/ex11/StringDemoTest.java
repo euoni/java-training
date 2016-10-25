@@ -1,6 +1,6 @@
 package jpl.ch01.ex11;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,7 +23,7 @@ public class StringDemoTest {
 	}
 
 	@Test
-	public void test() {
+	public void testMain() {
 		StringDemo.main(null);
 		assertEquals("Name = Ken Arnold" + System.lineSeparator(), outContent.toString());
 	}

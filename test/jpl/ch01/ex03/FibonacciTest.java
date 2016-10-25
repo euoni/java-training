@@ -23,13 +23,11 @@ public class FibonacciTest {
 	}
 
 	@Test
-	public void test() {
+	public void testMain() {
 		Fibonacci.main(null);
 
-		String expected = String.join(
-			System.lineSeparator(),
-			new String[] { "Fibonacci", "1", "1", "2", "3", "5", "8", "13", "21", "34" }
-		);
+		final String expected = String.join(System.lineSeparator(),
+				new String[] { "Fibonacci", "1", "1", "2", "3", "5", "8", "13", "21", "34" });
 		assertEquals(expected + System.lineSeparator(), outContent.toString());
 	}
 }

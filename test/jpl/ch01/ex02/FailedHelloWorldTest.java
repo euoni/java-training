@@ -4,7 +4,7 @@ import org.junit.Test;
 
 public class FailedHelloWorldTest {
 	@Test(expected = ArithmeticException.class)
-	public void test() {
+	public void testMain() {
 		FailedHelloWorld.main(null);
 	}
 }

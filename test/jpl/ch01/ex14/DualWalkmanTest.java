@@ -1,6 +1,6 @@
 package jpl.ch01.ex14;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,7 +23,7 @@ public class DualWalkmanTest {
 	}
 
 	@Test
-	public void test() {
+	public void testPlay() {
 		final String music = "music";
 		final DualChatWalkman walkman = new DualChatWalkman();
 		walkman.setTape(music);

@@ -23,7 +23,7 @@ public class HelloWorldTest {
 	}
 
 	@Test
-	public void test() {
+	public void testMain() {
 		HelloWorld.main(null);
 		assertEquals("Hello, world" + System.lineSeparator(), outContent.toString());
 	}

@@ -23,7 +23,7 @@ public class SquareTableTest {
 	}
 
 	@Test
-	public void test() {
+	public void testMain() {
 		SquareTable.main(null);
 
 		final String expected = String.join(System.lineSeparator(),

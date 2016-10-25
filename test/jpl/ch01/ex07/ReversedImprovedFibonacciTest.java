@@ -1,6 +1,6 @@
 package jpl.ch01.ex07;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,7 +23,7 @@ public class ReversedImprovedFibonacciTest {
 	}
 
 	@Test
-	public void test() {
+	public void testMain() {
 		ReversedImprovedFibonacci.main(null);
 
 		final String expected = String.join(System.lineSeparator(),
