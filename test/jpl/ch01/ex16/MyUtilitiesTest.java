@@ -1,12 +1,11 @@
 package jpl.ch01.ex16;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 public class MyUtilitiesTest {
-
 	@Test(expected = BadDataSetException.class)
 	public void testGetDataSet() throws BadDataSetException {
 		final String setName = "not-exists";
@@ -14,10 +13,9 @@ public class MyUtilitiesTest {
 		try {
 			util.getDataSet(setName);
 		} catch (final BadDataSetException e) {
-			assertEquals("not-exists.dset", e.file);
-			assertNotNull(e.innerException);
+			assertThat(e.file, is("not-exists.dset"));
+			assertThat(e.innerException, not(nullValue()));
 			throw e;
 		}
 	}
-
 }
