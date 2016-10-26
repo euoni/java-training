@@ -6,6 +6,12 @@ import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
 
 public class ImprovedFibonacciTest {
 	@Test
+	public void testImprovedFibonacci() {
+		new ImprovedFibonacci();
+		return;
+	}
+
+	@Test
 	public void testMain() {
 		final StdoutCapture sc = new StdoutCapture();
 		sc.start();

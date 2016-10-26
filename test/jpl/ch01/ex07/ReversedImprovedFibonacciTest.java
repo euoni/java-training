@@ -6,6 +6,12 @@ import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
 
 public class ReversedImprovedFibonacciTest {
 	@Test
+	public void testHelloWorld() {
+		new ReversedImprovedFibonacci();
+		return;
+	}
+
+	@Test
 	public void testMain() {
 		final StdoutCapture sc = new StdoutCapture();
 		sc.start();
