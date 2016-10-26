@@ -1,42 +1,32 @@
 package jpl.ch01.ex14;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
+import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
 import jpl.ch01.ex14.DualChatWalkman.Listener;
 
 public class DualChatWalkmanTest {
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
-	@Before
-	public void setUpStreams() {
-		System.setOut(new PrintStream(outContent));
-	}
-
-	@After
-	public void cleanUpStreams() {
-		System.setOut(null);
-	}
-
 	@Test
 	public void testChat1() {
+		final StdoutCapture sc = new StdoutCapture();
+		sc.start();
+
 		final DualChatWalkman walkman = new DualChatWalkman();
 		walkman.chat(Listener.ONE, "msg1");
 
-		assertEquals("1: msg1" + System.lineSeparator(), outContent.toString());
+		sc.stop();
+		sc.assertEquals("1: msg1");
 	}
 
 	@Test
 	public void testChat2() {
+		final StdoutCapture sc = new StdoutCapture();
+		sc.start();
+
 		final DualChatWalkman walkman = new DualChatWalkman();
 		walkman.chat(Listener.TWO, "msg2");
 
-		assertEquals("2: msg2" + System.lineSeparator(), outContent.toString());
+		sc.stop();
+		sc.assertEquals("2: msg2");
 	}
 }
