@@ -1,6 +1,6 @@
 package jpl.ch01.ex07;
 
-public class ImprovedFibonacci {
+public class ReversedImprovedFibonacci {
 
 	static final int MAX_INDEX = 9;
 

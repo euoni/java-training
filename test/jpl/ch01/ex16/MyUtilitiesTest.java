@@ -1,23 +1,35 @@
 package jpl.ch01.ex16;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.Test;
 
 public class MyUtilitiesTest {
+	@Test
+	public void testGetDataSet() throws IOException, BadDataSetException {
+		final File tmp = File.createTempFile("dataset", ".dset");
+		tmp.deleteOnExit();
+
+		final MyUtilities util = new MyUtilities();
+		String file = tmp.getPath();
+		file = file.substring(0, file.lastIndexOf('.'));
+		assertThat(util.getDataSet(file), nullValue());
+	}
 
 	@Test(expected = BadDataSetException.class)
-	public void testGetDataSet() throws BadDataSetException {
+	public void testGetDataSetError() throws BadDataSetException {
 		final String setName = "not-exists";
 		final MyUtilities util = new MyUtilities();
 		try {
 			util.getDataSet(setName);
 		} catch (final BadDataSetException e) {
-			assertEquals("not-exists.dset", e.file);
-			assertNotNull(e.innerException);
+			assertThat(e.file, is("not-exists.dset"));
+			assertThat(e.innerException, not(nullValue()));
 			throw e;
 		}
 	}
-
 }
