@@ -3,15 +3,11 @@ package jpl.ch02.ex09;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
-public class VehicleTest {
-	@Before
-	public void setUp() {
-		Vehicle.nextId = 0;
-	}
+import jpl.ch02.ex04.VehicleTestHelper;
 
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void testGetMaxId() {
 		assertThat(Vehicle.getMaxId(), is(-1));

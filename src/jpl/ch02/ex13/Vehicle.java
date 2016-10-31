@@ -1,7 +1,7 @@
 package jpl.ch02.ex13;
 
 public class Vehicle {
-	private static int nextId;
+	static int nextId;
 	private final int id;
 	private double speed;
 	private double direction;

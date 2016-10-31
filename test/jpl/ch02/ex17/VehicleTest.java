@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class VehicleTest {
+import jpl.ch02.ex13.VehicleTestHelper;
+
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void testTurnDouble() {
 		final Vehicle v = new Vehicle();
