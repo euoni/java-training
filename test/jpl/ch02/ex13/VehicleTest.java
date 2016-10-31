@@ -3,17 +3,9 @@ package jpl.ch02.ex13;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import mockit.Deencapsulation;
-
-public class VehicleTest {
-	@Before
-	public void setUp() throws Exception {
-		Deencapsulation.setField(Vehicle.class, "nextId", 0);
-	}
-
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void testVehicle() {
 		final Vehicle v1 = new Vehicle();

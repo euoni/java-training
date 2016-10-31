@@ -1,17 +1,11 @@
 package jpl.ch02.ex18;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
-import mockit.Deencapsulation;
+import jpl.ch02.ex13.VehicleTestHelper;
 
-public class VehicleTest {
-	@Before
-	public void setUp() {
-		Deencapsulation.setField(Vehicle.class, "nextId", 0);
-	}
-
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void testMainOne() {
 		final StdoutCapture sc = new StdoutCapture();

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class VehicleTest {
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void test() {
 		final Vehicle vehicle0 = new Vehicle();

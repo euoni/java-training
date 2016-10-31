@@ -1,16 +1,11 @@
 package jpl.ch02.ex07;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
+import jpl.ch02.ex04.VehicleTestHelper;
 
-public class VehicleTest {
-	@Before
-	public void setUp() {
-		Vehicle.nextId = 0;
-	}
-
+public class VehicleTest extends VehicleTestHelper {
 	@Test
 	public void test() {
 		final StdoutCapture sc = new StdoutCapture();
