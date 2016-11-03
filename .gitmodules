@@ -1,3 +1,4 @@
 [submodule "jpltest"]
 	path = jpltest
 	url = https://github.com/YoshikiShibata/jpltest.git
+	ignore = dirty
