@@ -30,9 +30,17 @@ public class VehicleTest extends VehicleTestHelper {
 		final Vehicle v = new Vehicle();
 		assertThat(v.getDirection(), is(0.));
 
-		final double direction = 180.;
-		v.setDirection(direction);
-		assertThat(v.getDirection(), is(direction));
+		v.setDirection(180.);
+		assertThat(v.getDirection(), is(180.));
+
+		v.setDirection(-180.);
+		assertThat(v.getDirection(), is(-180.));
+
+		v.setDirection(360. + 180.);
+		assertThat(v.getDirection(), is(180.));
+
+		v.setDirection(-360. - 180.);
+		assertThat(v.getDirection(), is(-180.));
 	}
 
 	@Test
@@ -57,9 +65,9 @@ public class VehicleTest extends VehicleTestHelper {
 	public void testToString() {
 		final Vehicle v = new Vehicle();
 		v.setSpeed(60.);
-		v.setDirection(360.);
+		v.setDirection(180.);
 		v.setOwner("OWNER");
 
-		assertThat(v.toString(), is("Vehicle [id=0, speed=60.0, direction=360.0, owner=OWNER]"));
+		assertThat(v.toString(), is("Vehicle [id=0, speed=60.0, direction=180.0, owner=OWNER]"));
 	}
 }

@@ -24,7 +24,7 @@ public class Vehicle {
 	}
 
 	public void setDirection(double direction) {
-		this.direction = direction;
+		this.direction = direction % 360;
 	}
 
 	public String getOwner() {
