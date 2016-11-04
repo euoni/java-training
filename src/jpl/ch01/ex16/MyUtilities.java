@@ -12,7 +12,7 @@ public class MyUtilities {
 			return readDataSet(in);
 		} catch (final IOException e) {
 			final BadDataSetException ex = new BadDataSetException();
-			ex.file = file;
+			ex.setName = setName;
 			ex.innerException = e;
 			throw ex;
 		} finally {

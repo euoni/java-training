@@ -27,7 +27,7 @@ public class MyUtilitiesTest {
 		try {
 			util.getDataSet(setName);
 		} catch (final BadDataSetException e) {
-			assertThat(e.file, is("not-exists.dset"));
+			assertThat(e.setName, is("not-exists"));
 			assertThat(e.innerException, not(nullValue()));
 			throw e;
 		}
