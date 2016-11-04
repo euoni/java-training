@@ -4,6 +4,6 @@ import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class BadDataSetException extends Exception {
-	public String file;
+	public String setName;
 	public IOException innerException;
 }
