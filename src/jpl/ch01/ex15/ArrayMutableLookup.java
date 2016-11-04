@@ -31,7 +31,7 @@ public class ArrayMutableLookup implements MutableLookup {
 	}
 
 	@Override
-	public Object remove(String name) {
+	public boolean remove(String name) {
 		Object found = null;
 		int i;
 		for (i = 0; i < names.length; ++i) {
@@ -41,7 +41,7 @@ public class ArrayMutableLookup implements MutableLookup {
 			}
 		}
 		if (found == null) {
-			return null;
+			return false;
 		}
 
 		final String[] new_names = new String[names.length - 1];
@@ -59,7 +59,7 @@ public class ArrayMutableLookup implements MutableLookup {
 		names = new_names;
 		values = new_values;
 
-		return found;
+		return true;
 	}
 
 }

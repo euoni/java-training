@@ -12,12 +12,11 @@ public interface MutableLookup extends Lookup {
 	void add(String name, Object value);
 
 	/**
-	 * nameと関連付けられた値を削除し，その値を返す．
-	 * そのような値がなければnullを返す．
+	 * nameと関連付けられた値を削除し，削除成功かどうか返す．
 	 *
 	 * @param name
 	 *            名前
-	 * @return 削除した値
+	 * @return 削除に成功したか
 	 */
-	Object remove(String name);
+	boolean remove(String name);
 }
