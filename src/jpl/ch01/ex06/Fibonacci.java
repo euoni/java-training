@@ -1,7 +1,7 @@
 package jpl.ch01.ex06;
 
 public class Fibonacci {
-	private static String title = "Fibonacci";
+	private static final String title = "Fibonacci";
 
 	/** 値が50未満のフィボナッチ数列を表示する */
 	public static void main(String[] args) {
