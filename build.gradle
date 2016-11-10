@@ -10,6 +10,7 @@ allprojects {
 
 dependencies {
     testCompile 'junit:junit:4.+'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile project(':jpltest')
 }
 
