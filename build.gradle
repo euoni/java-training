@@ -21,7 +21,13 @@ jacocoTestReport {
 }
 
 sourceSets.main.java.srcDirs = ['src']
+sourceSets.main.resources.srcDirs = ['resources']
 sourceSets.test.java.srcDirs = ['test']
+
+task deploy(type: Copy, dependsOn: jar) {
+    from 'build/libs'
+    into 'deploy'
+}
 
 project(':jpltest') {
     dependencies {
