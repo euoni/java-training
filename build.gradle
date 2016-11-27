@@ -24,10 +24,20 @@ sourceSets.main.java.srcDirs = ['src']
 sourceSets.main.resources.srcDirs = ['resources']
 sourceSets.test.java.srcDirs = ['test']
 
-task deploy(type: Copy, dependsOn: jar) {
-    from 'build/libs'
-    into 'deploy'
+def createGuiTask(def num) {
+    return tasks.create("gui$num", Jar) {
+        baseName name
+        manifest {
+            attributes 'Main-Class' : "gui.ex${num}.DigitalClock"
+        }
+        from(sourceSets.main.output.classesDir) {
+            include "gui/ex${num}/**"
+        }
+        from sourceSets.main.output.resourcesDir
+        destinationDir file('deploy')
+    }
 }
+createGuiTask('11')
 
 project(':jpltest') {
     dependencies {
