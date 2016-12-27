@@ -1,20 +1,20 @@
 package gui.ex12;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.MenuShortcut;
+import java.awt.Panel;
 import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
@@ -22,28 +22,32 @@ import java.util.TimerTask;
 
 @SuppressWarnings("serial")
 public class DigitalClock extends Frame {
-	private static final String FONT_PATH = "/DSEG7Modern-Regular.ttf";
-	private static final int FONT_SIZE = 48;
 	private static final double FPS = 10;
 
 	private final Timer repaintTimer = new Timer("repaint timer");
-	private Font font;
+	private Option option = new Option();
+	private final Panel space = new Panel();
 
 	public Image buf;
 
 	public DigitalClock() {
 		setTitle("Digital Clock");
-		setSize(300, 150);
-		initBuf();
+		setResizable(false);
 
-		// set default font
-		final URL url = getClass().getResource(FONT_PATH);
-		try (InputStream is = url.openStream()) {
-			font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont((float) FONT_SIZE);
-			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-		} catch (FontFormatException | IOException e) {
-			font = new Font(Font.MONOSPACED, Font.PLAIN, FONT_SIZE);
-		}
+		// set menu
+		final MenuBar menuBar = new MenuBar();
+		setMenuBar(menuBar);
+
+		final Menu menuOpt = menuBar.add(new Menu("Edit"));
+		final MenuItem menuPref = menuOpt.add(new MenuItem("Preferences", new MenuShortcut('P')));
+		final DigitalClock me = this;
+		menuPref.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Option selected = OptionDialog.select(me, option);
+				initBuf(selected);
+			}
+		});
 
 		// start timer
 		repaintTimer.scheduleAtFixedRate(new TimerTask() {
@@ -60,11 +64,10 @@ public class DigitalClock extends Frame {
 				repaintTimer.cancel();
 				dispose();
 			}
-		});
-		addComponentListener(new ComponentAdapter() {
+
 			@Override
-			public void componentResized(ComponentEvent e) {
-				initBuf();
+			public void windowOpened(WindowEvent e) {
+				initBuf(null);
 			}
 		});
 	}
@@ -81,20 +84,40 @@ public class DigitalClock extends Frame {
 	}
 
 	private void drawTime(Graphics g) {
-		g.clearRect(0, 0, getWidth(), getHeight());
+		g.setColor(option.background);
+		g.fillRect(0, 0, getWidth(), getHeight());
 
-		final String text = new SimpleDateFormat("HH:mm:ss").format(new Date());
-
-		// draw at center
-		g.setFont(font);
+		g.setColor(option.foreground);
+		g.setFont(option.font);
+		final String text = getDateString();
 		final FontMetrics fm = g.getFontMetrics();
-		final Rectangle rectText = fm.getStringBounds(text, g).getBounds();
-		final int x = getWidth() / 2 - rectText.width / 2;
-		final int y = getHeight() / 2 - rectText.height / 2 + fm.getMaxAscent();
+		final Rectangle bounds = fm.getStringBounds(text, g).getBounds();
+		final int x = getWidth() / 2 - bounds.width / 2;
+		final int y = getHeight() - Math.abs(fm.getDescent()) - fm.getLeading() - 1;
 		g.drawString(text, x, y);
 	}
 
-	private void initBuf() {
+	private void initBuf(Option option) {
+		if (option != null) {
+			this.option = option;
+		}
+
+		if (buf == null) {
+			buf = createImage(1, 1);
+		}
+
+		final String text = getDateString();
+		final Graphics g = buf.getGraphics();
+		g.setFont(this.option.font);
+		final FontMetrics fm = g.getFontMetrics();
+		final Rectangle bounds = fm.getStringBounds(text, g).getBounds();
+
+		setLayout(new GridLayout(1, 1));
+		space.setPreferredSize(bounds.getSize());
+		add(space);
+		pack();
+		remove(space);
+
 		buf = createImage(getWidth(), getHeight());
 	}
 
