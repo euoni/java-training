@@ -38,6 +38,7 @@ def createGuiTask(def num) {
     }
 }
 createGuiTask('11')
+createGuiTask('12')
 
 project(':jpltest') {
     dependencies {
