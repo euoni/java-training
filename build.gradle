@@ -26,6 +26,7 @@ sourceSets.test.java.srcDirs = ['test']
 
 def createGuiTask(def num) {
     return tasks.create("gui$num", Jar) {
+        dependsOn jar
         baseName name
         manifest {
             attributes 'Main-Class' : "gui.ex${num}.DigitalClock"
@@ -39,6 +40,7 @@ def createGuiTask(def num) {
 }
 createGuiTask('11')
 createGuiTask('12')
+createGuiTask('13')
 
 project(':jpltest') {
     dependencies {
