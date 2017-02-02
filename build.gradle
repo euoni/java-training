@@ -27,7 +27,7 @@ sourceSets.test.java.srcDirs = ['test']
 def createGuiTask(def num) {
     return tasks.create("gui$num", Jar) {
         dependsOn jar
-        baseName name
+        baseName 'DigitalClock'
         manifest {
             attributes 'Main-Class' : "gui.ex${num}.DigitalClock"
         }
@@ -35,7 +35,7 @@ def createGuiTask(def num) {
             include "gui/ex${num}/**"
         }
         from sourceSets.main.output.resourcesDir
-        destinationDir file('deploy')
+        destinationDir file("src/gui/ex${num}/")
     }
 }
 createGuiTask('11')
