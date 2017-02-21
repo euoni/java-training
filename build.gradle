@@ -41,6 +41,7 @@ def createGuiTask(def num) {
 createGuiTask('11')
 createGuiTask('12')
 createGuiTask('13')
+createGuiTask('14')
 
 project(':jpltest') {
     dependencies {
