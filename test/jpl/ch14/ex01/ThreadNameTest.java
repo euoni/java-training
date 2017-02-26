@@ -19,6 +19,6 @@ public class ThreadNameTest {
 		ThreadName.main(null);
 
 		sc.stop();
-		sc.assertEquals("main");
+		sc.assertEquals(Thread.currentThread().getName());
 	}
 }

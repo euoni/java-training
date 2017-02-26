@@ -1,6 +1,7 @@
 package jpl.ch14.ex08;
 
 public class SafeFriendly {
+	private static Object lock = new Object();
 	private SafeFriendly partner;
 	private final String name;
 
@@ -9,7 +10,7 @@ public class SafeFriendly {
 	}
 
 	public void hug() {
-		synchronized (SafeFriendly.class) {
+		synchronized (lock) {
 			System.out.println(Thread.currentThread().getName() + " in " + name + ".hug() trying to invoke "
 					+ partner.name + ".hugBack()");
 			partner.hugBack();
@@ -17,7 +18,7 @@ public class SafeFriendly {
 	}
 
 	private void hugBack() {
-		synchronized (SafeFriendly.class) {
+		synchronized (lock) {
 			System.out.println(Thread.currentThread().getName() + " in " + name + ".hugBack()");
 		}
 	}

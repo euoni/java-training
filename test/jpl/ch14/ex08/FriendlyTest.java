@@ -18,7 +18,8 @@ public class FriendlyTest {
 		f1.hug();
 
 		sc.stop();
-		sc.assertEquals("main in f1.hug() trying to invoke f2.hugBack()", "main in f2.hugBack()");
+		final String name = Thread.currentThread().getName();
+		sc.assertEquals(name + " in f1.hug() trying to invoke f2.hugBack()", name + " in f2.hugBack()");
 	}
 
 	@Test
