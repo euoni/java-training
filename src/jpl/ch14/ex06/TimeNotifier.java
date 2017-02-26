@@ -27,11 +27,13 @@ public class TimeNotifier {
 		final List<Thread> list = new ArrayList<>();
 		list.add(new Thread(new MessagePrinter(notifier, 15, "msg15")));
 		list.add(new Thread(new MessagePrinter(notifier, 7, "msg7")));
-
-		list.forEach((Thread t) -> t.start());
+		list.forEach(t -> t.start());
 
 		notifier.countUp(stop);
 
-		list.forEach((Thread t) -> t.interrupt());
+		for (final Thread thread : list) {
+			thread.interrupt();
+			thread.join();
+		}
 	}
 }

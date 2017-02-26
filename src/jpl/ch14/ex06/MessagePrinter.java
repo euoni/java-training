@@ -13,7 +13,7 @@ public class MessagePrinter implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (!Thread.interrupted()) {
 			int count = notifier.getCount();
 
 			synchronized (notifier) {

@@ -11,7 +11,6 @@ public class SafeFriendlyTest {
 		sc.start();
 
 		SafeFriendly.main(null);
-		Thread.sleep(100);
 
 		sc.stop();
 		sc.assertEquals("Thread1 in jareth.hug() trying to invoke cory.hugBack()", "Thread1 in cory.hugBack()",

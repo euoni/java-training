@@ -27,25 +27,30 @@ public class SafeFriendly {
 		this.partner = partner;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		final SafeFriendly jareth = new SafeFriendly("jareth");
 		final SafeFriendly cory = new SafeFriendly("cory");
 
 		jareth.becomeFrined(cory);
 		cory.becomeFrined(jareth);
 
-		new Thread(new Runnable() {
+		final Thread thread1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				jareth.hug();
 			}
-		}, "Thread1").start();
+		}, "Thread1");
+		thread1.start();
 
-		new Thread(new Runnable() {
+		final Thread thread2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				cory.hug();
 			}
-		}, "Thread2").start();
+		}, "Thread2");
+		thread2.start();
+
+		thread1.join();
+		thread2.join();
 	}
 }
