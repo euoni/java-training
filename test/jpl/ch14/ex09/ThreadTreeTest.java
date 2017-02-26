@@ -13,10 +13,19 @@ public class ThreadTreeTest {
 		ThreadTree.main(null);
 
 		sc.stop();
-		sc.assertEquals("+ RootGroup", "  + Group1(daemon)", "    - Thread(1s)", "    - Thread(2s)", "  + Group2",
-				"    - Thread(3s)", "", "+ RootGroup", "  + Group1(daemon)", "    - Thread(1s)", "    - Thread(2s)",
-				"  + Group2", "    - Thread(3s)", "", "+ RootGroup", "  + Group1(daemon)", "    - Thread(2s)",
-				"  + Group2", "    - Thread(3s)", "", "+ RootGroup", "  + Group2", "    - Thread(3s)", "",
-				"+ RootGroup", "  + Group2");
+		sc.assertEquals("java.lang.ThreadGroup[name=RootGroup,maxpri=10]",
+				"    java.lang.ThreadGroup[name=Group1(daemon),maxpri=10]",
+				"        Thread[Thread(1s),5,Group1(daemon)]", "        Thread[Thread(2s),5,Group1(daemon)]",
+				"    java.lang.ThreadGroup[name=Group2,maxpri=10]", "        Thread[Thread(3s),5,Group2]", "",
+				"java.lang.ThreadGroup[name=RootGroup,maxpri=10]",
+				"    java.lang.ThreadGroup[name=Group1(daemon),maxpri=10]",
+				"        Thread[Thread(1s),5,Group1(daemon)]", "        Thread[Thread(2s),5,Group1(daemon)]",
+				"    java.lang.ThreadGroup[name=Group2,maxpri=10]", "        Thread[Thread(3s),5,Group2]", "",
+				"java.lang.ThreadGroup[name=RootGroup,maxpri=10]",
+				"    java.lang.ThreadGroup[name=Group1(daemon),maxpri=10]",
+				"        Thread[Thread(2s),5,Group1(daemon)]", "    java.lang.ThreadGroup[name=Group2,maxpri=10]",
+				"        Thread[Thread(3s),5,Group2]", "", "java.lang.ThreadGroup[name=RootGroup,maxpri=10]",
+				"    java.lang.ThreadGroup[name=Group2,maxpri=10]", "        Thread[Thread(3s),5,Group2]", "",
+				"java.lang.ThreadGroup[name=RootGroup,maxpri=10]", "    java.lang.ThreadGroup[name=Group2,maxpri=10]");
 	}
 }

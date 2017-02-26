@@ -1,7 +1,5 @@
 package jpl.ch14.ex09;
 
-import java.util.Collections;
-
 public class ThreadTree {
 	private final long interval;
 	private Thread thread;
@@ -15,7 +13,8 @@ public class ThreadTree {
 			@Override
 			public void run() {
 				while (!Thread.interrupted()) {
-					display(root, 0);
+					root.list();
+					System.out.println();
 
 					try {
 						Thread.sleep(interval);
@@ -31,30 +30,6 @@ public class ThreadTree {
 	public void stopMonitor() throws InterruptedException {
 		thread.interrupt();
 		thread.join();
-	}
-
-	private void display(ThreadGroup root, int depth) {
-		System.out.print(String.join("", Collections.nCopies(depth, "  ")));
-		System.out.println("+ " + root.getName());
-		depth++;
-
-		final Thread[] threads = new Thread[root.activeCount()];
-		root.enumerate(threads, false);
-		for (final Thread thread : threads) {
-			if (thread != null) {
-				System.out.print(String.join("", Collections.nCopies(depth, "  ")));
-				System.out.println("- " + thread.getName());
-			}
-		}
-
-		final ThreadGroup[] groups = new ThreadGroup[root.activeGroupCount()];
-		root.enumerate(groups, false);
-		for (final ThreadGroup group : groups) {
-			display(group, depth);
-		}
-
-		if (depth == 1)
-			System.out.println();
 	}
 
 	public static void main(String[] args) throws InterruptedException {
