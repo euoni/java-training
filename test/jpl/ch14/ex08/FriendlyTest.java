@@ -21,11 +21,4 @@ public class FriendlyTest {
 		final String name = Thread.currentThread().getName();
 		sc.assertEquals(name + " in f1.hug() trying to invoke f2.hugBack()", name + " in f2.hugBack()");
 	}
-
-	@Test
-	public void testMain() {
-		Friendly.main(null);
-
-		// difficult to test
-	}
 }
