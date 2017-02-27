@@ -4,9 +4,8 @@
 package jpl.ch14.ex10;
 
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Simple Thread Pool class.
@@ -21,9 +20,10 @@ import java.util.concurrent.TimeUnit;
  * Don't use java.util.concurrent package.
  */
 public class ThreadPool {
-	private volatile boolean isRunning;
-	private final BlockingQueue<Runnable> queue;
+	private final int queueSize;
+	private final Queue<Runnable> queue;
 	private final Thread[] worker;
+	private volatile boolean isRunning;
 
 	/**
 	 * Constructs ThreadPool.
@@ -40,20 +40,29 @@ public class ThreadPool {
 		if (queueSize < 1 || numberOfThreads < 1)
 			throw new IllegalArgumentException();
 
-		queue = new ArrayBlockingQueue<>(queueSize, true);
+		this.queueSize = queueSize;
+		queue = new LinkedList<>();
 		worker = new Thread[numberOfThreads];
 		for (int i = 0; i < worker.length; i++) {
 			worker[i] = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					while (isRunning || !queue.isEmpty()) {
-						try {
-							final Runnable head = queue.poll(1, TimeUnit.MILLISECONDS);
-							if (head != null)
-								head.run();
-						} catch (final InterruptedException e) {
-							return;
+					try {
+						while (true) {
+							Runnable head;
+							synchronized (queue) {
+								while (queue.isEmpty()) {
+									queue.wait();
+									if (!isRunning && queue.isEmpty())
+										return;
+								}
+								head = queue.poll();
+								queue.notifyAll();
+							}
+							head.run();
 						}
+					} catch (final InterruptedException e) {
+						return;
 					}
 				}
 			}, "Worker" + i);
@@ -85,11 +94,17 @@ public class ThreadPool {
 			throw new IllegalStateException();
 
 		isRunning = false;
-		for (final Thread thread : worker) {
-			try {
-				thread.join();
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
+
+		while (Arrays.stream(worker).anyMatch(t -> t.isAlive())) {
+			synchronized (queue) {
+				queue.notifyAll();
+			}
+			for (final Thread thread : worker) {
+				try {
+					thread.join(1);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -112,10 +127,16 @@ public class ThreadPool {
 		if (!isRunning)
 			throw new IllegalStateException();
 
-		try {
-			queue.put(runnable);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
+		synchronized (queue) {
+			while (queue.size() >= queueSize) {
+				try {
+					queue.wait();
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			queue.add(runnable);
+			queue.notifyAll();
 		}
 	}
 }
