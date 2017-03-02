@@ -9,7 +9,7 @@ public class Game {
 		HEAD, TAIL;
 	}
 
-	private static Queue<String> players = new ArrayDeque<>();
+	protected static Queue<String> players = new ArrayDeque<>();
 	private int score;
 	private HeadsOrTails pre = HeadsOrTails.HEAD;
 
@@ -24,11 +24,11 @@ public class Game {
 		pre = coin;
 	}
 
-	private void reportScore(String name) {
+	protected void reportScore(String name) {
 		System.out.println(name + "'s score: " + score);
 	}
 
-	private static void reportException(String name, Exception e) {
+	protected static void reportException(String name, Exception e) {
 		System.err.println(name + "threw Exception");
 		e.printStackTrace();
 	}
@@ -51,7 +51,7 @@ public class Game {
 		}
 	}
 
-	private static String getNextPlayer() {
+	protected static String getNextPlayer() {
 		return players.poll();
 	}
 }

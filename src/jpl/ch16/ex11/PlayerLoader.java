@@ -32,7 +32,7 @@ public class PlayerLoader extends ClassLoader {
 		}
 	}
 
-	private InputStream streamFor(String name) throws IOException {
+	protected InputStream streamFor(String name) throws IOException {
 		final URL url = getClass().getResource("/jpl/ch16/ex11/" + name);
 		if (url == null)
 			throw new IOException();
