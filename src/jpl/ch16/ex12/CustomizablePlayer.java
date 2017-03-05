@@ -10,13 +10,11 @@ import jpl.ch16.ex11.Player;
 public class CustomizablePlayer implements Player {
 	@Override
 	public void play(Game game) {
-		final InputStream stream = getClass().getResourceAsStream("choice");
+		final InputStream stream = getClass().getResourceAsStream("/choice");
 		int choice;
 		try {
 			choice = stream.read();
-		} catch (final IOException e) {
-			choice = 0;
-		} catch (final NullPointerException e) {
+		} catch (final IOException | NullPointerException e) {
 			choice = 0;
 		}
 
