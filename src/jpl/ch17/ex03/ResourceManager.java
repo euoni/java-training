@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResourceManager {
-	final ReferenceQueue<Object> queue;
-	final Map<Reference<?>, Resource> refs;
-	final Thread reaper;
-	boolean shutdown = false;
+	protected ReferenceQueue<Object> queue;
+	protected Map<Reference<?>, Resource> refs;
+	protected Thread reaper;
+	protected boolean shutdown = false;
 
 	public ResourceManager() {
 		queue = new ReferenceQueue<>();
