@@ -45,6 +45,11 @@ createGuiTask('12')
 createGuiTask('13')
 createGuiTask('14')
 
+task linkedListJavadoc(type: Javadoc) {
+    source = sourceSets.main.allJava
+    include("jpl/ch19/ex01/LinkedList.java")
+}
+
 project(':jpltest') {
     dependencies {
         compile 'junit:junit:4.+'
