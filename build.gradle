@@ -50,6 +50,12 @@ task linkedListJavadoc(type: Javadoc) {
     include("jpl/ch19/ex01/LinkedList.java")
 }
 
+task linkedListPrivateJavadoc(type: Javadoc) {
+options.memberLevel = JavadocMemberLevel.PRIVATE
+    source = sourceSets.main.allJava
+    include("jpl/ch19/ex02/LinkedList.java")
+}
+
 project(':jpltest') {
     dependencies {
         compile 'junit:junit:4.+'
