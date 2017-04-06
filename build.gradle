@@ -45,6 +45,19 @@ createGuiTask('12')
 createGuiTask('13')
 createGuiTask('14')
 
+task interpretJar(type: Jar) {
+     dependsOn jar
+     baseName 'interpret'
+     manifest {
+         attributes 'Main-Class' : 'interpret.MainWindow'
+     }
+     from(sourceSets.main.output.classesDir) {
+         include "interpret/**"
+     }
+     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+     destinationDir file("src/interpret/")
+}
+
 task linkedListJavadoc(type: Javadoc) {
     source = sourceSets.main.allJava
     include("jpl/ch19/ex01/LinkedList.java")
