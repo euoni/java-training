@@ -123,17 +123,14 @@ public class PropertyTable extends JTable {
 		final int modelColumn = convertColumnIndexToModel(column);
 
 		if (modelColumn == 1) {
-			try {
-				editingClass = getModel().getValueAt(row, modelColumn).getClass();
+			editingClass = getModel().getValueAt(row, modelColumn).getClass();
 
-				if (editingClass.isArray()) {
-					return arrayEditor;
-				}
+			if (editingClass == null || editingClass == JFrame.class)
+				return null;
+			if (editingClass.isArray())
+				return arrayEditor;
 
-				return getDefaultEditor(editingClass);
-			} catch (final NullPointerException e) {
-				;
-			}
+			return getDefaultEditor(editingClass);
 		}
 
 		return super.getCellEditor(row, column);
