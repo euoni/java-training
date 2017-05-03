@@ -43,19 +43,19 @@ public class EntryTableTest {
 		sc.start();
 		table.printEntry(0);
 		sc.stop();
-		sc.assertEquals("Entry 1\nContent 1\n");
+		sc.assertEquals("Entry 1\nContent 1");
 
 		// Entry 2
 		sc.start();
 		table.printEntry(1);
 		sc.stop();
-		sc.assertEquals("Entry 2\nContent 2\n");
+		sc.assertEquals("Entry 2\nContent 2");
 
 		// Entry 3
 		sc.start();
 		table.printEntry(2);
 		sc.stop();
-		sc.assertEquals("Entry 3\nContent 3\n");
+		sc.assertEquals("Entry 3\nContent 3");
 	}
 
 	@Test
@@ -75,8 +75,8 @@ public class EntryTableTest {
 			System.setOut(out);
 		}
 
-		assertThat(buf.toString().replaceAll(System.lineSeparator() + "$", ""),
-				anyOf(is("Entry 1\nContent 1\n"), is("Entry 2\nContent 2\n"), is("Entry 3\nContent 3\n")));
+		assertThat(buf.toString().replaceAll("(\r?\n)*$", ""),
+				anyOf(is("Entry 1\nContent 1"), is("Entry 2\nContent 2"), is("Entry 3\nContent 3")));
 	}
 
 }
