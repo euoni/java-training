@@ -37,10 +37,10 @@ public class ClassContentsTest {
 				"  protected java.util.List<java.util.List<? super java.util.List<? extends Number, , >, , >, >[][][][][] generic;",
 				"", "  @jpl.ch16.ex04.Sample()",
 				"  <U extends java.util.List<String, >, , > jpl.ch16.ex09.SampleDerived(java.util.Map<U extends java.util.List<String, >, , T extends Number, , >, ) {}",
-				"", "  public java.util.Iterator<String, > iterator() {}", "", "  @jpl.ch16.ex04.Sample()",
-				"  transient strictfp <U, > void sample(java.util.Map<?, String, >, int[], ...) {}", "",
+				"",
 				"  public Number sample(@jpl.ch16.ex04.Sample() @Deprecated() double, ) throws Exception, java.io.IOException,  {}",
-				"", "}");
+				"", "  public java.util.Iterator<String, > iterator() {}", "", "  @jpl.ch16.ex04.Sample()",
+				"  transient strictfp <U, > void sample(java.util.Map<?, String, >, int[], ...) {}", "", "}");
 	}
 
 	@Test
