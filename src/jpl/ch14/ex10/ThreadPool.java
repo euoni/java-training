@@ -23,7 +23,7 @@ public class ThreadPool {
 	private final int queueSize;
 	private final Queue<Runnable> queue;
 	private final Thread[] worker;
-	private volatile boolean isRunning;
+	private boolean isRunning;
 
 	/**
 	 * Constructs ThreadPool.
@@ -37,8 +37,10 @@ public class ThreadPool {
 	 *             is less than 1
 	 */
 	public ThreadPool(int queueSize, int numberOfThreads) {
-		if (queueSize < 1 || numberOfThreads < 1)
-			throw new IllegalArgumentException();
+		if (queueSize < 1)
+			throw new IllegalArgumentException("queueSize < 1");
+		if (numberOfThreads < 1)
+			throw new IllegalArgumentException("numberOfThreads < 1");
 
 		this.queueSize = queueSize;
 		queue = new LinkedList<>();
@@ -53,8 +55,10 @@ public class ThreadPool {
 							synchronized (queue) {
 								while (queue.isEmpty()) {
 									queue.wait();
-									if (!isRunning && queue.isEmpty())
-										return;
+									synchronized (this) {
+										if (!isRunning && queue.isEmpty())
+											return;
+									}
 								}
 								head = queue.poll();
 								queue.notifyAll();
@@ -76,11 +80,13 @@ public class ThreadPool {
 	 *             if threads has been already started.
 	 */
 	public void start() {
-		if (isRunning)
-			throw new IllegalStateException();
+		synchronized (this) {
+			if (isRunning)
+				throw new IllegalStateException("started");
 
-		isRunning = true;
-		Arrays.stream(worker).forEach(t -> t.start());
+			isRunning = true;
+			Arrays.stream(worker).forEach(t -> t.start());
+		}
 	}
 
 	/**
@@ -90,10 +96,12 @@ public class ThreadPool {
 	 *             if threads has not been started.
 	 */
 	public void stop() {
-		if (!isRunning)
-			throw new IllegalStateException();
+		synchronized (this) {
+			if (!isRunning)
+				throw new IllegalStateException("stopped already");
 
-		isRunning = false;
+			isRunning = false;
+		}
 
 		while (Arrays.stream(worker).anyMatch(t -> t.isAlive())) {
 			synchronized (queue) {
@@ -123,9 +131,9 @@ public class ThreadPool {
 	 */
 	public synchronized void dispatch(Runnable runnable) {
 		if (runnable == null)
-			throw new NullPointerException();
+			throw new NullPointerException("runnable is null");
 		if (!isRunning)
-			throw new IllegalStateException();
+			throw new IllegalStateException("stopped already");
 
 		synchronized (queue) {
 			while (queue.size() >= queueSize) {

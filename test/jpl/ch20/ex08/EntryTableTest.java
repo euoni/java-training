@@ -3,6 +3,7 @@ package jpl.ch20.ex08;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,14 +23,17 @@ public class EntryTableTest {
 	public void setUpFile() throws IOException {
 		file = File.createTempFile("tmp", null);
 		file.deleteOnExit();
-		final FileWriter writer = new FileWriter(file);
-		writer.write("header\n");
-		writer.write("%%Entry 1\n");
-		writer.write("Content 1\n");
-		writer.write("%%Entry 2\n");
-		writer.write("Content 2\n");
-		writer.write("%%Entry 3\n");
-		writer.write("Content 3\n");
+		final BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		writer.write("header");
+		writer.newLine();
+		writer.write("%%Entry 1");
+		writer.newLine();
+		writer.write("Content 1");
+		writer.newLine();
+		writer.write("%%Entry 2");
+		writer.newLine();
+		writer.write("Content 2");
+		writer.newLine();
 		writer.close();
 	}
 
@@ -43,19 +47,13 @@ public class EntryTableTest {
 		sc.start();
 		table.printEntry(0);
 		sc.stop();
-		sc.assertEquals("Entry 1\nContent 1");
+		sc.assertEquals("Entry 1", "Content 1");
 
 		// Entry 2
 		sc.start();
 		table.printEntry(1);
 		sc.stop();
-		sc.assertEquals("Entry 2\nContent 2");
-
-		// Entry 3
-		sc.start();
-		table.printEntry(2);
-		sc.stop();
-		sc.assertEquals("Entry 3\nContent 3");
+		sc.assertEquals("Entry 2", "Content 2");
 	}
 
 	@Test
@@ -76,7 +74,8 @@ public class EntryTableTest {
 		}
 
 		assertThat(buf.toString().replaceAll("(\r?\n)*$", ""),
-				anyOf(is("Entry 1\nContent 1"), is("Entry 2\nContent 2"), is("Entry 3\nContent 3")));
+				anyOf(is("Entry 1" + System.lineSeparator() + "Content 1"),
+						is("Entry 2" + System.lineSeparator() + "Content 2")));
 	}
 
 }
