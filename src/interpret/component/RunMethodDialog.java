@@ -49,7 +49,7 @@ public class RunMethodDialog extends JDialog {
 
 		final JScrollPane scrollPane = new JScrollPane();
 
-		btnOk = new JButton("OK");
+		btnOk = new JButton("Run");
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
