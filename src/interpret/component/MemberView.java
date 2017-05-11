@@ -49,15 +49,21 @@ public class MemberView extends JPanel {
 				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
+					Object ret;
 					try {
-						dialog.getMethod().invoke(obj, dialog.getParams());
+						ret = dialog.getMethod().invoke(obj, dialog.getParams());
 					} catch (IllegalAccessException | IllegalArgumentException ex) {
 						JOptionPane.showMessageDialog(MemberView.this, ex.getMessage(), ex.getClass().getName(),
 								JOptionPane.ERROR_MESSAGE);
+						return;
 					} catch (final InvocationTargetException ex) {
 						JOptionPane.showMessageDialog(MemberView.this, ex.getCause().getMessage(),
 								ex.getCause().getClass().getName(), JOptionPane.ERROR_MESSAGE);
+						return;
 					}
+
+					JOptionPane.showMessageDialog(MemberView.this, String.valueOf(ret), "Result",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});

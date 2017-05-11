@@ -2,8 +2,6 @@ package interpret;
 
 import java.awt.Color;
 
-import javax.swing.JOptionPane;
-
 @SuppressWarnings("unused")
 public class Sample {
 	private int privateInt;
@@ -16,6 +14,10 @@ public class Sample {
 	public int[] intArray = new int[] { 0, 1 };
 
 	public void setBoolean(boolean b) {
-		JOptionPane.showMessageDialog(null, "param is " + b);
+		trueBoolean = b;
+	}
+
+	public String getString() {
+		return "Sample Class";
 	}
 }
