@@ -42,22 +42,28 @@ public class MemberView extends JPanel {
 		final JPanel panelSelected = new JPanel();
 		add(panelSelected, "panelSelected");
 
-		final JButton btnRunMethod = new JButton("Run method");
-		btnRunMethod.addActionListener(new ActionListener() {
+		final JButton btnSelectMethod = new JButton("Select method");
+		btnSelectMethod.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
+					Object ret;
 					try {
-						dialog.getMethod().invoke(obj, dialog.getParams());
+						ret = dialog.getMethod().invoke(obj, dialog.getParams());
 					} catch (IllegalAccessException | IllegalArgumentException ex) {
 						JOptionPane.showMessageDialog(MemberView.this, ex.getMessage(), ex.getClass().getName(),
 								JOptionPane.ERROR_MESSAGE);
+						return;
 					} catch (final InvocationTargetException ex) {
 						JOptionPane.showMessageDialog(MemberView.this, ex.getCause().getMessage(),
 								ex.getCause().getClass().getName(), JOptionPane.ERROR_MESSAGE);
+						return;
 					}
+
+					JOptionPane.showMessageDialog(MemberView.this, String.valueOf(ret), "Result",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
@@ -71,10 +77,10 @@ public class MemberView extends JPanel {
 										.addGroup(gl_panelSelected.createParallelGroup(Alignment.LEADING)
 												.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 426,
 														Short.MAX_VALUE)
-												.addComponent(btnRunMethod))
+												.addComponent(btnSelectMethod))
 										.addContainerGap()));
 		gl_panelSelected.setVerticalGroup(gl_panelSelected.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelSelected.createSequentialGroup().addContainerGap().addComponent(btnRunMethod)
+				.addGroup(gl_panelSelected.createSequentialGroup().addContainerGap().addComponent(btnSelectMethod)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE).addContainerGap()));
 
