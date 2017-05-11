@@ -8,6 +8,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -60,10 +62,20 @@ public class DigitalClock extends JFrame {
 					repaint();
 				}
 			}, 0, (int) (1000. / FPS));
+			addHierarchyListener(new HierarchyListener() {
+				@Override
+				public void hierarchyChanged(HierarchyEvent e) {
+					if (e.getChangeFlags() == HierarchyEvent.DISPLAYABILITY_CHANGED)
+						if (!isDisplayable())
+							repaintTimer.cancel();
+				}
+			});
 		}
 
 		@Override
 		public void paintComponent(Graphics g) {
+			g.clearRect(0, 0, getWidth(), getHeight());
+
 			final String text = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
 			// draw at center
