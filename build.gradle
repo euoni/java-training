@@ -45,6 +45,7 @@ createGuiTask('12')
 createGuiTask('13')
 createGuiTask('14')
 createGuiTask('21')
+createGuiTask('22')
 
 task interpretJar(type: Jar) {
      dependsOn jar
