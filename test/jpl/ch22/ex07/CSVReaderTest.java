@@ -48,7 +48,7 @@ public class CSVReaderTest {
 	@Test
 	public void testReadCSVTable3() throws IOException {
 		final StringReader buf = new StringReader("0,1,2\n3,4,5\n");
-		final List<String[]> table = CSVReader.readCSVTable(buf, 4);
+		final List<String[]> table = CSVReader.readCSVTable(buf, 3);
 
 		assertThat(table.size(), is(2));
 		assertThat(table.get(0), arrayContaining("0", "1", "2"));
