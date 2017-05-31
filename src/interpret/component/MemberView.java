@@ -53,13 +53,8 @@ public class MemberView extends JPanel {
 					Object ret;
 					try {
 						ret = dialog.getMethod().invoke(obj, dialog.getParams());
-					} catch (IllegalAccessException | IllegalArgumentException ex) {
-						JOptionPane.showMessageDialog(MemberView.this, ex.getMessage(), ex.getClass().getName(),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (final InvocationTargetException ex) {
-						JOptionPane.showMessageDialog(MemberView.this, ex.getCause().getMessage(),
-								ex.getCause().getClass().getName(), JOptionPane.ERROR_MESSAGE);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+						MessageDialog.showException(MemberView.this, ex);
 						return;
 					}
 

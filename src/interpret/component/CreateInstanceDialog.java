@@ -19,7 +19,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
@@ -216,11 +215,9 @@ public class CreateInstanceDialog extends JDialog {
 
 		try {
 			return ctor.newInstance(args);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-		} catch (final InvocationTargetException e) {
-			JOptionPane.showMessageDialog(this, e.getCause().getMessage(), e.getCause().getClass().getName(),
-					JOptionPane.ERROR_MESSAGE);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			MessageDialog.showException(this, e);
 		}
 
 		return null;
