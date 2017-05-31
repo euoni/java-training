@@ -1,6 +1,8 @@
 package interpret.component;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -78,5 +80,9 @@ public class InstanceViewModel extends AbstractTableModel {
 
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
+	}
+
+	public Map<String, Object> getVariableMap() {
+		return new HashMap<>(data);
 	}
 }

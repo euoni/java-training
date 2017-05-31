@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import interpret.component.InstanceView;
+import interpret.component.InstanceViewModel;
 import interpret.component.MemberView;
 
 public class MainWindow {
@@ -56,7 +57,8 @@ public class MainWindow {
 		final JSplitPane splitPane = new JSplitPane();
 		frmInterpreter.getContentPane().add(splitPane, BorderLayout.CENTER);
 
-		instanceView = new InstanceView();
+		final InstanceViewModel model = new InstanceViewModel();
+		instanceView = new InstanceView(model);
 		instanceView.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -67,7 +69,7 @@ public class MainWindow {
 		instanceView.register("sample", new Sample());
 		splitPane.setLeftComponent(instanceView);
 
-		memberView = new MemberView();
+		memberView = new MemberView(model);
 		splitPane.setRightComponent(memberView);
 	}
 

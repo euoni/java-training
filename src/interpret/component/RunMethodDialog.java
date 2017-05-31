@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -26,7 +27,7 @@ public class RunMethodDialog extends JDialog {
 	private boolean canceled;
 	private final Class<?> klass;
 
-	public RunMethodDialog(Component owner, Class<?> klass) {
+	public RunMethodDialog(Component owner, Class<?> klass, Map<String, Object> variables) {
 		super(SwingUtilities.getWindowAncestor(owner));
 
 		this.klass = klass;
@@ -82,7 +83,7 @@ public class RunMethodDialog extends JDialog {
 								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnOk).addContainerGap()));
 
-		paramTable = new ParamTable(paramModel);
+		paramTable = new ParamTable(paramModel, variables);
 		lblParameters.setLabelFor(paramTable);
 		paramTable.setFillsViewportHeight(true);
 		scrollPane.setViewportView(paramTable);

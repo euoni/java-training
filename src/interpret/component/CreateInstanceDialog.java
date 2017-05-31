@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -39,7 +40,7 @@ public class CreateInstanceDialog extends JDialog {
 	private Object instance;
 	private boolean canceled;
 
-	public CreateInstanceDialog(Component owner) {
+	public CreateInstanceDialog(Component owner, Map<String, Object> variables) {
 		super(SwingUtilities.getWindowAncestor(owner));
 
 		setModal(true);
@@ -109,7 +110,7 @@ public class CreateInstanceDialog extends JDialog {
 		});
 		combCtor.setRenderer(new ConstructorListCellRenderer());
 
-		paramTable = new ParamTable(paramModel);
+		paramTable = new ParamTable(paramModel, variables);
 		lblParameters.setLabelFor(paramTable);
 		paramTable.setFillsViewportHeight(true);
 		scrollPane.setViewportView(paramTable);

@@ -21,13 +21,13 @@ import interpret.component.PropertyTable.PropertyModel;
 @SuppressWarnings("serial")
 public class MemberView extends JPanel {
 	private final CardLayout layout;
-	private final PropertyModel model = new PropertyModel();
+	private final PropertyModel propertyModel = new PropertyModel();
 	private Object obj;
 
 	/**
 	 * Create the panel.
 	 */
-	public MemberView() {
+	public MemberView(InstanceViewModel instanceModel) {
 		layout = new CardLayout(0, 0);
 		setLayout(layout);
 
@@ -46,7 +46,8 @@ public class MemberView extends JPanel {
 		btnSelectMethod.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass());
+				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass(),
+						instanceModel.getVariableMap());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
 					Object ret;
@@ -84,8 +85,8 @@ public class MemberView extends JPanel {
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE).addContainerGap()));
 
-		final PropertyTable propertyTable = new PropertyTable(model);
-		propertyTable.setModel(model);
+		final PropertyTable propertyTable = new PropertyTable(propertyModel);
+		propertyTable.setModel(propertyModel);
 		propertyTable.setFillsViewportHeight(true);
 		scrollPane.setViewportView(propertyTable);
 		panelSelected.setLayout(gl_panelSelected);
@@ -93,7 +94,7 @@ public class MemberView extends JPanel {
 
 	public void setObject(Object obj) {
 		this.obj = obj;
-		model.setTarget(obj);
+		propertyModel.setTarget(obj);
 		layout.show(this, obj == null ? "panelEmpty" : "panelSelected");
 	}
 }

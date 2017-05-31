@@ -19,13 +19,15 @@ import jiconfont.swing.IconFontSwing;
 
 @SuppressWarnings("serial")
 public class InstanceView extends JComponent {
-	private final InstanceViewModel model = new InstanceViewModel();
+	private final InstanceViewModel model;
 	private final JTable table;
 
 	/**
 	 * Create the panel.
 	 */
-	public InstanceView() {
+	public InstanceView(InstanceViewModel model) {
+		this.model = model;
+
 		IconFontSwing.register(FontAwesome.getIconFont());
 
 		setLayout(new BorderLayout(0, 0));
@@ -41,7 +43,7 @@ public class InstanceView extends JComponent {
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this);
+				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, model.getVariableMap());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
 					model.add(dialog.getInstanceName(), dialog.getInstance());
