@@ -11,6 +11,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class ClassContents {
 	private static String[] types = { "class", "interface", "enum", "annotation" };
@@ -124,6 +126,13 @@ public class ClassContents {
 	}
 
 	private static void printExecutable(Executable[] executable) {
+		Arrays.sort(executable, new Comparator<Executable>() {
+			@Override
+			public int compare(Executable o1, Executable o2) {
+				return o1.toString().compareTo(o2.toString());
+			}
+		});
+
 		for (final Executable e : executable) {
 			// for test
 			if (e.getName().equals("$jacocoInit"))
