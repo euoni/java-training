@@ -20,6 +20,21 @@ import org.junit.Test;
  * @author Yoshiki Shibata
  */
 public class ThreadPoolTest {
+    private final Set<Thread> ignoredThread = new HashSet<>();
+
+    public ThreadPoolTest() {
+        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+        int activeCount = tg.activeCount();
+        Thread[] threads = new Thread[activeCount];
+        tg.enumerate(threads);
+        for (Thread t : threads)
+            if (t != Thread.currentThread())
+                ignoredThread.add(t);
+    }
+
+    private boolean isIgnoredThread(Thread t) {
+        return t != null && ignoredThread.contains(t);
+    }
 
     /**
      * Simple counter task which counts the number of invocation of run()
@@ -95,9 +110,8 @@ public class ThreadPoolTest {
             Thread[] threads = new Thread[activeCount];
             tg.enumerate(threads);
             for (Thread t : threads) {
-                if ("ReaderThread".equals(t.getName())) {
+                if ("ReaderThread".equals(t.getName()) || isIgnoredThread(t)) {
                     activeCount--;
-                    break;
                 }
             }
         }
@@ -488,7 +502,7 @@ public class ThreadPoolTest {
                 }
 
                 // Excludes the ReaderThread of Eclipse.
-                if ("ReaderThread".equals(t.getName())) {
+                if ("ReaderThread".equals(t.getName()) || isIgnoredThread(t)) {
                     continue;
                 }
 
