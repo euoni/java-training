@@ -49,9 +49,6 @@ public class InstanceViewModel extends AbstractTableModel {
 	}
 
 	public void add(String name, Object obj) {
-		if (data.containsKey(name))
-			throw new IllegalArgumentException(name + " already exists");
-
 		data.put(name, obj);
 
 		fireTableRowsInserted(data.size() - 1, data.size() - 1);
