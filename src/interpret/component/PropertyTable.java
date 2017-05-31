@@ -74,11 +74,16 @@ public class PropertyTable extends JTable {
 
 		static void setFinalStatic(Field field, Object newValue)
 				throws IllegalArgumentException, IllegalAccessException {
-			Field modifiersField = null;
 			try {
 				field = field.getDeclaringClass().getField(field.getName());
+			} catch (final NoSuchFieldException e) {
+			}
+
+			Field modifiersField = null;
+			try {
 				modifiersField = Field.class.getDeclaredField("modifiers");
 			} catch (final NoSuchFieldException e) {
+				throw new IllegalArgumentException(e);
 			}
 
 			field.setAccessible(true);
