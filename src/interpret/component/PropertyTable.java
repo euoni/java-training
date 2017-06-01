@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
@@ -66,8 +65,7 @@ public class PropertyTable extends JTable {
 					else
 						field.set(target, aValue);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), e.getClass().getName(),
-							JOptionPane.ERROR_MESSAGE);
+					MessageDialog.showException(null, e);
 				}
 			}
 		}
