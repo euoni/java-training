@@ -1,4 +1,4 @@
-package interpret.component;
+package interpret.data;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -16,7 +16,7 @@ public class ClassList {
 	private static final List<String> systemClasses = new ArrayList<>();
 	private static final List<String> userClasses = new ArrayList<>();
 
-	{
+	static {
 		// load system class names
 		for (final String path : System.getProperty("sun.boot.class.path")
 				.split(System.getProperty("path.separator"))) {

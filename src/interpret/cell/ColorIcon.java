@@ -35,5 +35,4 @@ public class ColorIcon implements Icon {
 	public int getIconHeight() {
 		return size;
 	}
-
 }

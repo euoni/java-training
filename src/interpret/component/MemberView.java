@@ -21,13 +21,13 @@ import interpret.component.PropertyTable.PropertyModel;
 @SuppressWarnings("serial")
 public class MemberView extends JPanel {
 	private final CardLayout layout;
-	private final PropertyModel model = new PropertyModel();
+	private final PropertyModel propertyModel = new PropertyModel();
 	private Object obj;
 
 	/**
 	 * Create the panel.
 	 */
-	public MemberView() {
+	public MemberView(InstanceView instances) {
 		layout = new CardLayout(0, 0);
 		setLayout(layout);
 
@@ -46,19 +46,15 @@ public class MemberView extends JPanel {
 		btnSelectMethod.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass());
+				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass(),
+						instances.getVariableMap());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
 					Object ret;
 					try {
 						ret = dialog.getMethod().invoke(obj, dialog.getParams());
-					} catch (IllegalAccessException | IllegalArgumentException ex) {
-						JOptionPane.showMessageDialog(MemberView.this, ex.getMessage(), ex.getClass().getName(),
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (final InvocationTargetException ex) {
-						JOptionPane.showMessageDialog(MemberView.this, ex.getCause().getMessage(),
-								ex.getCause().getClass().getName(), JOptionPane.ERROR_MESSAGE);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+						MessageDialog.showException(MemberView.this, ex);
 						return;
 					}
 
@@ -84,8 +80,8 @@ public class MemberView extends JPanel {
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE).addContainerGap()));
 
-		final PropertyTable propertyTable = new PropertyTable(model);
-		propertyTable.setModel(model);
+		final PropertyTable propertyTable = new PropertyTable(propertyModel);
+		propertyTable.setModel(propertyModel);
 		propertyTable.setFillsViewportHeight(true);
 		scrollPane.setViewportView(propertyTable);
 		panelSelected.setLayout(gl_panelSelected);
@@ -93,7 +89,7 @@ public class MemberView extends JPanel {
 
 	public void setObject(Object obj) {
 		this.obj = obj;
-		model.setTarget(obj);
+		propertyModel.setTarget(obj);
 		layout.show(this, obj == null ? "panelEmpty" : "panelSelected");
 	}
 }

@@ -2,9 +2,9 @@ package interpret.component;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
@@ -54,17 +54,40 @@ public class PropertyTable extends JTable {
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			final Field field = target.getClass().getDeclaredFields()[rowIndex];
-			field.setAccessible(true);
-
 			if (columnIndex == 1) {
+				final Field field = target.getClass().getDeclaredFields()[rowIndex];
+				field.setAccessible(true);
+
 				try {
-					field.set(target, aValue);
+					final int mod = field.getModifiers();
+					if (Modifier.isStatic(mod) && Modifier.isFinal(mod))
+						setFinalStatic(field, aValue);
+					else
+						field.set(target, aValue);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), e.getClass().getName(),
-							JOptionPane.ERROR_MESSAGE);
+					MessageDialog.showException(null, e);
 				}
 			}
+		}
+
+		static void setFinalStatic(Field field, Object newValue)
+				throws IllegalArgumentException, IllegalAccessException {
+			try {
+				field = field.getDeclaringClass().getField(field.getName());
+			} catch (final NoSuchFieldException e) {
+			}
+
+			Field modifiersField = null;
+			try {
+				modifiersField = Field.class.getDeclaredField("modifiers");
+			} catch (final NoSuchFieldException e) {
+				throw new IllegalArgumentException(e);
+			}
+
+			field.setAccessible(true);
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+			field.set(null, newValue);
 		}
 
 		@Override

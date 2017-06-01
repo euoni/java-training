@@ -21,5 +21,4 @@ public class ArrayEditor extends AbstractCellEditor implements TableCellEditor {
 	public Object getCellEditorValue() {
 		return value;
 	}
-
 }

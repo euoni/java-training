@@ -6,11 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import interpret.component.InstanceView;
 import interpret.component.MemberView;
+import interpret.data.NamedObject;
 
 public class MainWindow {
 	private JFrame frmInterpreter;
@@ -57,17 +58,18 @@ public class MainWindow {
 		frmInterpreter.getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		instanceView = new InstanceView();
-		instanceView.addListSelectionListener(new ListSelectionListener() {
+		instanceView.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				memberView.setObject(instanceView.getSelectedObject());
+			public void valueChanged(TreeSelectionEvent e) {
+				final NamedObject selected = instanceView.getSelectedObject();
+				memberView.setObject(selected == null ? null : selected.getObj());
 			}
 		});
 		instanceView.register("this", this);
 		instanceView.register("sample", new Sample());
 		splitPane.setLeftComponent(instanceView);
 
-		memberView = new MemberView();
+		memberView = new MemberView(instanceView);
 		splitPane.setRightComponent(memberView);
 	}
 

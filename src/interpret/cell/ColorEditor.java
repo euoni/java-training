@@ -59,5 +59,4 @@ public class ColorEditor extends AbstractCellEditor implements TableCellEditor {
 		button.setText(ColorRenderer.getColorString(currentColor));
 		return button;
 	}
-
 }
