@@ -14,6 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import interpret.data.NamedObject;
+import interpret.data.PrimitiveDefaults;
+
 import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
@@ -88,24 +92,9 @@ public class VariableDialog extends JDialog {
 		final Object item = suggestionComboBox.getSelectedItem();
 		if (item instanceof NamedObject) {
 			final NamedObject namedObject = (NamedObject) item;
-			return namedObject.name;
+			return namedObject.getName();
 		}
 
 		return null;
-	}
-
-	private static class NamedObject {
-		String name;
-		Object obj;
-
-		public NamedObject(String name, Object obj) {
-			this.name = name;
-			this.obj = obj;
-		}
-
-		@Override
-		public String toString() {
-			return obj.getClass().toString() + " " + name;
-		}
 	}
 }

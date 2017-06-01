@@ -3,31 +3,37 @@ package interpret.component;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
+import interpret.data.NamedObject;
 import jiconfont.icons.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 
 @SuppressWarnings("serial")
 public class InstanceView extends JComponent {
-	private final InstanceViewModel model;
-	private final JTable table;
+	private final JTree tree;
+	private final DefaultMutableTreeNode rootNode;
 
 	/**
 	 * Create the panel.
 	 */
-	public InstanceView(InstanceViewModel model) {
-		this.model = model;
-
+	public InstanceView() {
 		IconFontSwing.register(FontAwesome.getIconFont());
 
 		setLayout(new BorderLayout(0, 0));
@@ -39,15 +45,19 @@ public class InstanceView extends JComponent {
 		final JPanel btnPanel = new JPanel();
 		panel.add(btnPanel, BorderLayout.EAST);
 
+		final JLabel lblObjects = new JLabel("Objects");
+		panel.add(lblObjects, BorderLayout.CENTER);
+
 		final JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, model.getVariableMap());
+				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, getVariableMap());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
-					model.add(dialog.getInstanceName(), dialog.getInstance());
-					table.setRowSelectionInterval(table.getRowCount() - 1, table.getRowCount() - 1);
+					register(dialog.getInstanceName(), dialog.getInstance());
+					tree.clearSelection();
+					tree.addSelectionRow(tree.getRowCount() - 1);
 				}
 			}
 		});
@@ -58,56 +68,80 @@ public class InstanceView extends JComponent {
 		btnPanel.add(btnRemove);
 		btnRemove.setEnabled(false);
 		btnRemove.setIcon(IconFontSwing.buildIcon(FontAwesome.MINUS_CIRCLE, btnRemove.getFont().getSize()));
-
-		final JLabel lblObjects = new JLabel("Objects");
-		panel.add(lblObjects, BorderLayout.CENTER);
 		btnRemove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final int index = table.getSelectionModel().getMinSelectionIndex();
-				if (index != -1) {
-					if (model.getRowCount() == 1)
-						table.setRowSorter(null);
-					model.remove(index);
-				}
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionModel().getSelectionPath()
+						.getLastPathComponent();
+				node.removeFromParent();
+				((DefaultTreeModel) tree.getModel()).reload();
 			}
 		});
 
 		final JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, BorderLayout.CENTER);
 
-		table = new JTable(model);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setAutoCreateRowSorter(true);
-		scrollPane.setViewportView(table);
-
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		rootNode = new DefaultMutableTreeNode();
+		tree = new JTree(rootNode);
+		tree.setRootVisible(false);
+		tree.setShowsRootHandles(true);
+		tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				btnRemove.setEnabled(!table.getSelectionModel().isSelectionEmpty());
+			public void valueChanged(TreeSelectionEvent e) {
+				final TreePath path = tree.getSelectionModel().getSelectionPath();
+				if (path == null) {
+					btnRemove.setEnabled(false);
+					return;
+				}
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+				btnRemove.setEnabled(node.getParent() == rootNode);
 			}
 		});
+		scrollPane.setViewportView(tree);
 	}
 
 	public void register(String name, Object obj) {
-		model.add(name, obj);
+		final NamedObject named = new NamedObject(name, obj);
+		final DefaultMutableTreeNode node = new DefaultMutableTreeNode(named);
+		if (obj.getClass().isArray()) {
+			final int length = Array.getLength(obj);
+			for (int i = 0; i < length; i++) {
+				final DefaultMutableTreeNode child = new DefaultMutableTreeNode(new NamedObject(named, i));
+				node.add(child);
+			}
+		}
+
+		rootNode.add(node);
+		((DefaultTreeModel) tree.getModel()).reload();
 	}
 
-	public String getSelectedName() {
-		final int index = table.getSelectionModel().getMinSelectionIndex();
-		return index == -1 ? null : model.getName(index);
+	public NamedObject getSelectedObject() {
+		final TreePath path = tree.getSelectionModel().getSelectionPath();
+		if (path == null)
+			return null;
+
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		final NamedObject named = (NamedObject) node.getUserObject();
+		return named;
 	}
 
-	public Object getSelectedObject() {
-		final int index = table.getSelectionModel().getMinSelectionIndex();
-		return index == -1 ? null : model.getObj(index);
+	public void addTreeSelectionListener(TreeSelectionListener l) {
+		tree.getSelectionModel().addTreeSelectionListener(l);
 	}
 
-	public void addListSelectionListener(ListSelectionListener l) {
-		table.getSelectionModel().addListSelectionListener(l);
+	public void removeTreeSelectionListener(TreeSelectionListener l) {
+		tree.getSelectionModel().removeTreeSelectionListener(l);
 	}
 
-	public void removeListSelectionListener(ListSelectionListener l) {
-		table.getSelectionModel().removeListSelectionListener(l);
+	public Map<String, Object> getVariableMap() {
+		final HashMap<String, Object> map = new HashMap<>();
+		@SuppressWarnings("unchecked")
+		final ArrayList<Object> list = Collections.list(rootNode.children());
+		for (final Object node : list) {
+			final DefaultMutableTreeNode typedNode = (DefaultMutableTreeNode) node;
+			final NamedObject named = (NamedObject) typedNode.getUserObject();
+			map.put(named.getName(), named.getObj());
+		}
+		return map;
 	}
 }

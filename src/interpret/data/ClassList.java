@@ -1,4 +1,4 @@
-package interpret.component;
+package interpret.data;
 
 import java.io.IOException;
 import java.net.JarURLConnection;

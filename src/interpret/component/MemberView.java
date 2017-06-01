@@ -27,7 +27,7 @@ public class MemberView extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public MemberView(InstanceViewModel instanceModel) {
+	public MemberView(InstanceView instances) {
 		layout = new CardLayout(0, 0);
 		setLayout(layout);
 
@@ -47,7 +47,7 @@ public class MemberView extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final RunMethodDialog dialog = new RunMethodDialog(MemberView.this, obj.getClass(),
-						instanceModel.getVariableMap());
+						instances.getVariableMap());
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
 					Object ret;

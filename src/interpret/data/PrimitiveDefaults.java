@@ -1,4 +1,4 @@
-package interpret.component;
+package interpret.data;
 
 public class PrimitiveDefaults {
 	private static boolean DEFAULT_BOOLEAN;

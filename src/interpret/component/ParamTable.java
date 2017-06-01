@@ -19,6 +19,7 @@ import javax.swing.table.TableCellRenderer;
 
 import interpret.cell.ColorEditor;
 import interpret.cell.ColorRenderer;
+import interpret.data.PrimitiveDefaults;
 
 @SuppressWarnings("serial")
 public class ParamTable extends JTable {

@@ -26,6 +26,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import interpret.component.ParamTable.ParamModel;
+import interpret.data.ClassList;
 
 @SuppressWarnings("serial")
 public class CreateInstanceDialog extends JDialog {
