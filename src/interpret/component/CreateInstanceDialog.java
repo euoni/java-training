@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -19,8 +20,12 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -38,9 +43,11 @@ public class CreateInstanceDialog extends JDialog {
 	private final ParamTable paramTable;
 	private JButton btnOk;
 	private Object instance;
-	private boolean canceled;
+	private boolean canceled = true;
+	private JTabbedPane tabbedPane;
+	private JSpinner spinLength;
 
-	public CreateInstanceDialog(Component owner, Map<String, Object> variables) {
+	public CreateInstanceDialog(Component owner, Map<String, Object> variables, String forceName, Class<?> superClass) {
 		super(SwingUtilities.getWindowAncestor(owner));
 
 		setModal(true);
@@ -80,14 +87,6 @@ public class CreateInstanceDialog extends JDialog {
 		lblClass.setDisplayedMnemonic('C');
 		lblClass.setLabelFor(combClass);
 
-		final JLabel lblConstructor = new JLabel("Constructor:");
-		lblConstructor.setDisplayedMnemonic('s');
-
-		final JLabel lblParameters = new JLabel("Parameters:");
-		lblParameters.setDisplayedMnemonic('P');
-
-		final JScrollPane scrollPane = new JScrollPane();
-
 		btnOk = new JButton("OK");
 		btnOk.addActionListener(new ActionListener() {
 			@Override
@@ -101,35 +100,21 @@ public class CreateInstanceDialog extends JDialog {
 		});
 		btnOk.setMnemonic('O');
 
-		combCtor = new JComboBox<>();
-		combCtor.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				initParamTable();
-			}
-		});
-		combCtor.setRenderer(new ConstructorListCellRenderer());
-
-		paramTable = new ParamTable(paramModel, variables);
-		lblParameters.setLabelFor(paramTable);
-		paramTable.setFillsViewportHeight(true);
-		scrollPane.setViewportView(paramTable);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
 		final GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup().addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-						.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblConstructor)
-								.addComponent(lblName).addComponent(lblClass).addComponent(lblParameters))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-								.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-								.addComponent(combClass, 0, 343, Short.MAX_VALUE)
-								.addComponent(combCtor, 0, 343, Short.MAX_VALUE)))
-						.addComponent(btnOk, Alignment.TRAILING))
-				.addContainerGap()));
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+				groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout
+						.createParallelGroup(Alignment.TRAILING)
+						.addComponent(tabbedPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblName)
+										.addComponent(lblClass))
+								.addGap(36)
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+										.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+										.addComponent(combClass, GroupLayout.PREFERRED_SIZE, 343, Short.MAX_VALUE)))
+						.addComponent(btnOk)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
 				.createSequentialGroup().addContainerGap()
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -140,13 +125,78 @@ public class CreateInstanceDialog extends JDialog {
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblClass).addComponent(
 						combClass, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblConstructor)
-						.addComponent(combCtor, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-						.addComponent(lblParameters))
+				.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
 				.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnOk).addContainerGap()));
+
+		final JPanel singlePanel = new JPanel();
+		tabbedPane.addTab("Single", null, singlePanel, null);
+		singlePanel.setName("");
+
+		final JLabel lblParameters = new JLabel("Parameters:");
+		lblParameters.setDisplayedMnemonic('P');
+
+		final JScrollPane scrollPane = new JScrollPane();
+		paramTable = new ParamTable(paramModel, variables);
+		paramTable.setFillsViewportHeight(true);
+		scrollPane.setViewportView(paramTable);
+
+		final JLabel lblConstructor = new JLabel("Constructor:");
+		lblConstructor.setDisplayedMnemonic('s');
+
+		combCtor = new JComboBox<>();
+		combCtor.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				initParamTable();
+			}
+		});
+		combCtor.setRenderer(new ConstructorListCellRenderer());
+
+		final GroupLayout gl_singlePanel = new GroupLayout(singlePanel);
+		gl_singlePanel.setHorizontalGroup(gl_singlePanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_singlePanel.createSequentialGroup().addContainerGap()
+						.addGroup(gl_singlePanel.createParallelGroup(Alignment.LEADING).addComponent(lblConstructor)
+								.addComponent(lblParameters))
+						.addGap(12)
+						.addGroup(gl_singlePanel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE).addComponent(
+										combCtor, 0, 314, Short.MAX_VALUE))
+						.addContainerGap()));
+		gl_singlePanel
+				.setVerticalGroup(gl_singlePanel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+						gl_singlePanel.createSequentialGroup().addContainerGap()
+								.addGroup(gl_singlePanel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(combCtor, GroupLayout.PREFERRED_SIZE, 17,
+												GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblConstructor))
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(gl_singlePanel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+										.addComponent(lblParameters))
+								.addContainerGap()));
+		singlePanel.setLayout(gl_singlePanel);
+
+		lblParameters.setLabelFor(paramTable);
+
+		final JPanel arrayPanel = new JPanel();
+		tabbedPane.addTab("Array", null, arrayPanel, null);
+		arrayPanel.setName("array");
+
+		final JLabel lblLength = new JLabel("Length:");
+
+		spinLength = new JSpinner();
+		spinLength.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		final GroupLayout gl_arrayPanel = new GroupLayout(arrayPanel);
+		gl_arrayPanel.setHorizontalGroup(gl_arrayPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_arrayPanel.createSequentialGroup().addContainerGap().addComponent(lblLength)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(spinLength, GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE).addContainerGap()));
+		gl_arrayPanel.setVerticalGroup(gl_arrayPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_arrayPanel
+				.createSequentialGroup().addContainerGap()
+				.addGroup(gl_arrayPanel.createParallelGroup(Alignment.BASELINE).addComponent(lblLength).addComponent(
+						spinLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addContainerGap(110, Short.MAX_VALUE)));
+		arrayPanel.setLayout(gl_arrayPanel);
 		getContentPane().setLayout(groupLayout);
 
 		boxEditor = new PlaceholderComboBoxEditor("java.awt.Frame");
@@ -158,12 +208,19 @@ public class CreateInstanceDialog extends JDialog {
 				if (bg == null)
 					bg = input.getBackground();
 
+				Class<?> klass;
 				try {
-					Class.forName(boxEditor.getItem().toString());
+					klass = Class.forName(boxEditor.getItem().toString());
 				} catch (final ClassNotFoundException | NullPointerException e) {
 					input.setBackground(Color.PINK);
 					return false;
 				}
+
+				if (superClass != null && !superClass.isAssignableFrom(klass)) {
+					input.setBackground(Color.PINK);
+					return false;
+				}
+
 				input.setBackground(bg);
 				return true;
 			}
@@ -203,7 +260,15 @@ public class CreateInstanceDialog extends JDialog {
 		});
 		combClass.setEditor(boxEditor);
 
-		canceled = true;
+		if (forceName != null) {
+			txtName.setText(forceName);
+			txtName.setEnabled(false);
+			tabbedPane.setEnabledAt(1, false);
+		}
+
+		if (superClass != null) {
+			combClass.setSelectedItem(superClass.getCanonicalName());
+		}
 	}
 
 	private void initParamTable() {
@@ -211,25 +276,37 @@ public class CreateInstanceDialog extends JDialog {
 	}
 
 	private Object createInstance() {
-		final Constructor<?> ctor = (Constructor<?>) combCtor.getSelectedItem();
-		final Object[] args = paramModel.getValues();
+		if (tabbedPane.getSelectedIndex() == 0) {
+			final Constructor<?> ctor = (Constructor<?>) combCtor.getSelectedItem();
+			final Object[] args = paramModel.getValues();
 
-		try {
-			return ctor.newInstance(args);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			MessageDialog.showException(this, e);
+			try {
+				return ctor.newInstance(args);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				MessageDialog.showException(this, e);
+				return null;
+			}
+		} else {
+			Class<?> klass;
+			try {
+				klass = Class.forName((String) combClass.getSelectedItem());
+			} catch (final ClassNotFoundException e) {
+				MessageDialog.showException(this, e);
+				return null;
+			}
+			return Array.newInstance(klass, (int) spinLength.getValue());
 		}
-
-		return null;
 	}
 
 	private boolean isFilled() {
 		if (txtName.getText().isEmpty())
 			return false;
 
-		if (combCtor.getSelectedItem() == null)
-			return false;
+		if (tabbedPane.getSelectedIndex() == 0) {
+			if (combCtor.getSelectedItem() == null)
+				return false;
+		}
 
 		return true;
 	}

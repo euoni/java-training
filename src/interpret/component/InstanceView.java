@@ -19,6 +19,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import interpret.data.NamedObject;
@@ -52,7 +53,8 @@ public class InstanceView extends JComponent {
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, getVariableMap());
+				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, getVariableMap(), null,
+						null);
 				dialog.setVisible(true);
 				if (!dialog.isCanceled()) {
 					register(dialog.getInstanceName(), dialog.getInstance());
@@ -74,9 +76,34 @@ public class InstanceView extends JComponent {
 				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionModel().getSelectionPath()
 						.getLastPathComponent();
 				node.removeFromParent();
-				((DefaultTreeModel) tree.getModel()).reload();
+				reload(rootNode);
 			}
 		});
+
+		final JButton btnAssign = new JButton("Assign Item");
+		btnAssign.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final TreePath path = tree.getSelectionModel().getSelectionPath();
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+				final NamedObject namedItem = (NamedObject) node.getUserObject();
+				final DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
+				final NamedObject namedArray = (NamedObject) parentNode.getUserObject();
+
+				final CreateInstanceDialog dialog = new CreateInstanceDialog(InstanceView.this, getVariableMap(),
+						namedItem.getName(), namedArray.getObj().getClass().getComponentType());
+				dialog.setVisible(true);
+				if (!dialog.isCanceled()) {
+					final int index = parentNode.getIndex(node);
+					Array.set(namedArray.getObj(), index, dialog.getInstance());
+					node.setUserObject(new NamedObject(namedArray, index));
+					reload(node);
+					tree.clearSelection();
+					tree.setSelectionPath(path);
+				}
+			}
+		});
+		btnPanel.add(btnAssign);
 
 		final JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, BorderLayout.CENTER);
@@ -91,10 +118,14 @@ public class InstanceView extends JComponent {
 				final TreePath path = tree.getSelectionModel().getSelectionPath();
 				if (path == null) {
 					btnRemove.setEnabled(false);
+					btnAssign.setEnabled(false);
 					return;
 				}
 				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 				btnRemove.setEnabled(node.getParent() == rootNode);
+
+				final NamedObject named = (NamedObject) node.getUserObject();
+				btnAssign.setEnabled(node.getParent() != rootNode && named.getObj() == null);
 			}
 		});
 		scrollPane.setViewportView(tree);
@@ -112,7 +143,7 @@ public class InstanceView extends JComponent {
 		}
 
 		rootNode.add(node);
-		((DefaultTreeModel) tree.getModel()).reload();
+		reload(rootNode);
 	}
 
 	public NamedObject getSelectedObject() {
@@ -143,5 +174,9 @@ public class InstanceView extends JComponent {
 			map.put(named.getName(), named.getObj());
 		}
 		return map;
+	}
+
+	private void reload(TreeNode node) {
+		((DefaultTreeModel) tree.getModel()).reload(node);
 	}
 }
