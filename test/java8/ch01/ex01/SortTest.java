@@ -18,6 +18,6 @@ public class SortTest {
 		Sort.main(null);
 
 		sc.stop();
-		sc.assertEquals("Thread used in Arrays.sort: ", "main");
+		sc.assertEquals("Thread used in Arrays.sort: ", Thread.currentThread().getName());
 	}
 }
