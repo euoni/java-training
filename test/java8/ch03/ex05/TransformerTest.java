@@ -28,7 +28,7 @@ public class TransformerTest {
 		assertThat(equals(out, expect), is(true));
 	}
 
-	private boolean equals(Image img1, Image img2) {
+	public static boolean equals(Image img1, Image img2) {
 		if (img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight())
 			return false;
 
