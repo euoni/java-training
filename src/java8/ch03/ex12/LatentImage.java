@@ -19,12 +19,12 @@ public class LatentImage {
 		pendingOperations = new ArrayList<>();
 	}
 
-	LatentImage transform(ColorTransformer f) {
+	public LatentImage transform(ColorTransformer f) {
 		pendingOperations.add(f);
 		return this;
 	}
 
-	LatentImage transform(UnaryOperator<Color> f) {
+	public LatentImage transform(UnaryOperator<Color> f) {
 		return transform(ColorTransformerUtil.pixelIndependent(f));
 	}
 
