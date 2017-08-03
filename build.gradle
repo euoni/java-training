@@ -36,7 +36,9 @@ def createGuiTask(def num) {
         from(sourceSets.main.output.classesDir) {
             include "gui/ex${num}/**"
         }
-        from sourceSets.main.output.resourcesDir
+        from(sourceSets.main.output.resourcesDir) {
+            include "*.ttf"
+        }
         destinationDir file("src/gui/ex${num}/")
     }
 }
@@ -47,6 +49,7 @@ createGuiTask('14')
 createGuiTask('21')
 createGuiTask('22')
 createGuiTask('23')
+createGuiTask('24')
 
 task interpretJar(type: Jar) {
      dependsOn jar
