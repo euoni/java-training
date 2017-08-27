@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="java8.ch04.ex09.Anime">
+   <children>
+      <Ellipse fx:id="path" fill="TRANSPARENT" radiusX="100.0" radiusY="60.0" stroke="GRAY" strokeType="INSIDE" />
+      <Circle fill="DARKORANGE" radius="37.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="planet" fill="DODGERBLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+   </children>
+</StackPane>
