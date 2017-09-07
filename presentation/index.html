@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Java研修成果発表</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n-\r?\n$" >
+          <script type="text/template">
+# Java研修<br>成果発表
+
+---
+
+## なぜJava研修？
+
+-
+
+### 1. せっかくだから言語コレクションを増やしておこう
+
+業務にも役立つかも
+
+-
+
+### 2. 本をじっくり読んで言語を覚えた経験なし
+
+オンラインヘルプとソースコードを読むだけだった
+
+-
+
+### そして現在……
+
+1. 言語コレクションは増えた！が、業務では使わず
+1. 本を読み通した！
+
+---
+
+## 研修を通して学んだこと
+
+-
+
+### 自動テストの重要性
+自動テスト環境を用意したが手動テストとは効率が大違いだった
+
+[![CircleCI](https://circleci.com/gh/euoni/java-training.svg?style=shield)](https://circleci.com/gh/euoni/java-training)
+[![codecov](https://codecov.io/gh/euoni/java-training/branch/master/graph/badge.svg)](https://codecov.io/gh/euoni/java-training)
+[![codebeat badge](https://codebeat.co/badges/a3add46d-2ee4-4cce-97b6-f232656d1775)](https://codebeat.co/projects/github-com-euoni-java-training)
+
+-
+
+### テストの難しさ
+テストしたことがない人（自分）の設計はテストしづらい
+
+---
+
+## 研修で苦労したこと
+
+-
+
+### 1つの言語に集中できない
+ついついPython3.xやC++17について調べだして時間が足りなくなる
+
+-
+
+### 下層レイヤーの理解が足りない
+これまで情報系のしっかりした講義を受けたり本を読んだことがないため、知識がまだら
+
+---
+
+## 今後研修する人達へのアドバイス
+
+-
+
+### 夜型の人は、早く寝て夜中に起きて課題をやりましょう
+
+静かで涼しく、とても集中できます
+
+---
+
+## 講師へのアドバイス
+
+-
+
+### テキストとは直接関係ない話もためになりました
+
+---
+
+## 研修成果の今後への活用
+
+-
+
+### 業務で
+
+自分の担当モジュール分は自動テスト環境を構築
+
+統合テストも自動化したい
+
+-
+
+### 趣味で
+
+趣味成果物も全てCI準備完了
+
+#### [GitLab.com](https://about.gitlab.com/gitlab-com/)がオススメ
+- 無料無制限プライベートリポジトリ
+- CIも無料
+- 他にも色々無料
+          </script>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        slideNumber: true,
+        history: true,
+        mouseWheel: true,
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
