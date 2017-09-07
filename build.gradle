@@ -11,6 +11,18 @@ allprojects {
 dependencies {
     compile 'com.github.jiconfont:jiconfont-swing:1.+'
     compile 'com.github.jiconfont:jiconfont-font_awesome:4.+'
+    compile 'com.google.zxing:core:3.3.0'
+    compile 'com.google.zxing:javase:3.3.0'
+    compile (group: 'org.bytedeco', name: 'javacv-platform', version: '1.3.3') {
+        exclude module: 'ffmpeg'
+        exclude module: 'flycapture'
+        exclude module: 'libdc1394'
+        exclude module: 'libfreenect'
+        exclude module: 'libfreenect2'
+        exclude module: 'librealsense'
+        exclude module: 'videoinput'
+        exclude module: 'artoolkitplus'
+    }
     testCompile 'junit:junit:4.+'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile project(':jpltest')
@@ -58,10 +70,31 @@ task interpretJar(type: Jar) {
          attributes 'Main-Class' : 'interpret.MainWindow'
      }
      from(sourceSets.main.output.classesDir) {
-         include "interpret/**"
+         include 'interpret/**'
      }
      from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-     destinationDir file("src/interpret/")
+     destinationDir file('src/interpret/')
+}
+
+task arclockJar(type: Jar) {
+     dependsOn jar
+     baseName 'arclock'
+     manifest {
+         attributes 'Main-Class' : 'arclock.Clock'
+     }
+     from(sourceSets.main.output.classesDir) {
+         include 'arclock/**'
+     }
+     from(sourceSets.main.output.resourcesDir) {
+         include "arclock/*.fxml"
+     }
+     exclude 'lib/armeabi/**'
+     exclude 'fonts/**'
+     exclude 'jiconfont/**'
+     exclude 'org/bytedeco/javacpp/linux-armhf/**'
+     exclude 'org/bytedeco/javacpp/linux-ppc64le/**'
+     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+     destinationDir file('src/arclock/')
 }
 
 task linkedListJavadoc(type: Javadoc) {
